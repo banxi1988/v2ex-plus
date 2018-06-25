@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "description": "优雅便捷的 V2EX 扩展",
   "background": {
-    "scripts": ["libs/jquery-3.2.0.min.js", "libs/webtoolkit.base64.min.js","background.js","clipboard.js"]
+    "scripts": ["jquery.min.js", "background.js"]
   },
   "permissions": [
     "alarms",
@@ -24,14 +24,27 @@
       "js": ["libs/jquery-3.2.0.min.js", "all.js"]
     },
     {
-      "matches": ["*://*.v2ex.com/", "*://*.v2ex.com/?tab=*", "*://*.v2ex.com/go/*", "*://*.v2ex.com/my/*", "*://*.v2ex.com/recent*", "*://*.v2ex.com/changes*"],
+      "matches": [
+        "*://*.v2ex.com/",
+        "*://*.v2ex.com/?tab=*",
+        "*://*.v2ex.com/go/*",
+        "*://*.v2ex.com/my/*",
+        "*://*.v2ex.com/recent*",
+        "*://*.v2ex.com/changes*"
+      ],
       "css": ["v2ex_tab.css"],
       "js": ["v2ex_tab.js", "user_info.js"]
     },
     {
       "matches": ["*://*.v2ex.com/t/*"],
       "css": ["v2ex_reply.css"],
-      "js": ["emoticon.js", "clipboard.js", "v2ex_reply.js", "user_info.js", "sync_collect.js"]
+      "js": [
+        "emoticon.js",
+        "clipboard.js",
+        "v2ex_reply.js",
+        "user_info.js",
+        "sync_collect.js"
+      ]
     },
     {
       "matches": ["*://*.v2ex.com/new"],
@@ -47,7 +60,7 @@
     "default_icon": "icon/icon38.png"
   },
   "options_ui": {
-    "page": "page/options.html",
+    "page": "options.html",
     "open_in_tab": true
   },
   "icons": {

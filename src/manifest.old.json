@@ -1,0 +1,85 @@
+{
+  "name": "v2ex plus",
+  "version": "1.3.9.1",
+  "version_name": "1.3.9",
+  "manifest_version": 2,
+  "description": "优雅便捷的 V2EX 扩展",
+  "background": {
+    "scripts": [
+      "libs/jquery-3.2.0.min.js",
+      "libs/webtoolkit.base64.min.js",
+      "background.js",
+      "clipboard.js"
+    ]
+  },
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage",
+    "contextMenus",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.v2ex.com/*",
+    "*://*.imgur.com/*",
+    "*://*.weibo.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.v2ex.com/*"],
+      "js": ["libs/jquery-3.2.0.min.js", "all.js"]
+    },
+    {
+      "matches": [
+        "*://*.v2ex.com/",
+        "*://*.v2ex.com/?tab=*",
+        "*://*.v2ex.com/go/*",
+        "*://*.v2ex.com/my/*",
+        "*://*.v2ex.com/recent*",
+        "*://*.v2ex.com/changes*"
+      ],
+      "css": ["v2ex_tab.css"],
+      "js": ["v2ex_tab.js", "user_info.js"]
+    },
+    {
+      "matches": ["*://*.v2ex.com/t/*"],
+      "css": ["v2ex_reply.css"],
+      "js": [
+        "emoticon.js",
+        "clipboard.js",
+        "v2ex_reply.js",
+        "user_info.js",
+        "sync_collect.js"
+      ]
+    },
+    {
+      "matches": ["*://*.v2ex.com/new"],
+      "css": ["v2ex_new.css"],
+      "js": ["v2ex_new.js"]
+    },
+    {
+      "matches": ["*://*.v2ex.com/my/topics"],
+      "js": ["v2ex_collect.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon/icon38.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icon/icon16.png",
+    "48": "icon/icon48.png",
+    "128": "icon/icon128.png"
+  },
+  "web_accessible_resources": ["img/*"],
+  "commands": {
+    "newMsg": {
+      "suggested_key": {
+        "default": "Ctrl+B"
+      },
+      "description": "查看 V2EX 消息"
+    }
+  }
+}

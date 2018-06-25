@@ -1,0 +1,1 @@
+const req = require("./libs/core")
