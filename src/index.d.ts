@@ -4,3 +4,7 @@ declare function require(module: string): any;
 declare interface Window {
   a: any;
 }
+
+declare interface Document {
+  onpaste: Function;
+}

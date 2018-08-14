@@ -1,8 +1,15 @@
+import { V2EXUrls } from "@/v2ex";
+
 //倒三角图片
 // const triangle_img = chrome.extension.getURL("img/triangle.jpg");
 
 //关注与屏蔽
-function follow_or_bolck(_target, bash, undo, default_name) {
+function follow_or_bolck(
+  _target: JQuery<HTMLElement>,
+  bash: string,
+  undo: string,
+  default_name: string
+) {
   var v = "撤销";
   _target.attr("value") == "撤销" && (bash = undo) && (v = default_name);
   _target.attr("value", "等待");
@@ -22,7 +29,7 @@ function hidden_user_info() {
   setTimeout(function() {
     _user_info.css("visibility", "hidden");
   }, 300);
-  hidden_userInfo = null;
+  hidden_userInfo = 0;
 }
 
 const userInfoHtml = require("./user_info.njk");
@@ -40,14 +47,15 @@ var _user_company = $("#userCompany");
 var _user_follow = $("#userFollow");
 var _user_block = $("#userBlock");
 var _triangle_img = $("#userInfo > img");
-var avatar_src;
-var btn_key;
-var btn_once;
-var display_loading_img;
-var display_userInfo;
-var hidden_userInfo;
+var avatar_src: string;
+var btn_key: string;
+var btn_once: string;
+var display_loading_img: number;
+var display_userInfo: number;
+var hidden_userInfo: number;
 
-$(".fr > a > img", ".header").css({ minWidth: "73px" });
+// $(".fr > a > img", ".header").css({ minWidth: "73px" });
+$(".fr > a > img .header").css({ minWidth: "73px" });
 $("#Main .avatar").mouseenter(function() {
   var _this = $(this);
   var _cell = _this.parents("div[id^=r_]");
@@ -57,7 +65,7 @@ $("#Main .avatar").mouseenter(function() {
   _reply_user_name = _reply_user_name
     ? _reply_user_name.substr(8)
     : _cell.find("strong a").text();
-  avatar_src = _this.attr("src");
+  avatar_src = _this.attr("src")!;
   _this.attr("vPlus-src", avatar_src);
   _triangle_img.css({ bottom: "-6px", top: "auto", transform: "rotate(0deg)" });
 
@@ -70,7 +78,7 @@ $("#Main .avatar").mouseenter(function() {
       _this.attr("src", chrome.extension.getURL("img/loading.gif"));
     }, 280);
   }
-  if (_this.offset().top - $(document).scrollTop() < 200) {
+  if (_this.offset()!.top - $(document).scrollTop()! < 200) {
     info_position = [0, 48];
     _this.height() != 48 && (info_position[1] = 75);
     _triangle_img.css({
@@ -83,11 +91,11 @@ $("#Main .avatar").mouseenter(function() {
     clearTimeout(hidden_userInfo);
     _user_info.css({
       top:
-        _this.offset().top -
-        info_position[0] * (32 + _user_info.height()) +
+        _this.offset()!.top -
+        info_position[0] * (32 + _user_info.height()!) +
         info_position[1] +
         "px",
-      left: _this.offset().left - 106 + "px",
+      left: _this.offset()!.left - 106 + "px",
       visibility: "visible",
       marginTop: "10px",
       opacity: "1"
@@ -96,31 +104,31 @@ $("#Main .avatar").mouseenter(function() {
     display_userInfo = setTimeout(function() {
       _user_info.css({
         top:
-          _this.offset().top -
-          info_position[0] * (32 + _user_info.height()) +
+          _this.offset()!.top -
+          info_position[0] * (32 + _user_info.height()!) +
           info_position[1] +
           "px",
-        left: _this.offset().left - 106 + "px",
+        left: _this.offset()!.left - 106 + "px",
         visibility: "visible",
         marginTop: "10px",
         opacity: "1"
       });
       setTimeout(function() {
-        _this.attr("src", _this.attr("vPlus-src"));
+        _this.attr("src", _this.attr("vPlus-src") || "");
       }, 280);
     }, 500);
   } else {
     display_userInfo = setTimeout(function() {
       //各种原因决定不用 API 以获得更多数据
-      $.get("https://www.v2ex.com/member/" + _reply_user_name, function(data) {
+      $.get(V2EXUrls.member + _reply_user_name, function(data) {
         data = data.substring(
           data.indexOf('id="Main"'),
           data.indexOf('class="fl"')
         );
         //获取用户信息
-        var id = RegExp("V2EX 第 ([0-9]+?) 号会员").exec(data)[1];
+        var id = RegExp("V2EX 第 ([0-9]+?) 号会员").exec(data)![1];
         var location = RegExp('maps\\?q=(.+?)"').exec(data);
-        var created = RegExp("加入于 (.+?) ").exec(data)[1];
+        var created = RegExp("加入于 (.+?) ").exec(data)![1];
         var tagline = RegExp('bigger">(.+?)</span>').exec(data);
         var website = RegExp('"(.+?)".*?alt="Website.*?&nbsp;(.+?)<').exec(
           data
@@ -129,13 +137,15 @@ $("#Main .avatar").mouseenter(function() {
           'building"></li> &nbsp; <strong>(.*?)</strong> (.*?)</span>'
         ).exec(data);
         var online = RegExp("ONLINE").exec(data);
-        btn_key = RegExp("/([0-9]+?\\?t=[0-9]+?)';").exec(data);
-        btn_once = RegExp("/([0-9]+?\\?once=[0-9]+?)';").exec(data);
+        const btn_key_groups = RegExp("/([0-9]+?\\?t=[0-9]+?)';").exec(data);
+        const btn_once_groups = RegExp("/([0-9]+?\\?once=[0-9]+?)';").exec(
+          data
+        );
         var follow = RegExp("加入特别关注").test(data);
         var block = RegExp("Block").test(data);
-        if (btn_key) {
-          btn_key = btn_key[1]; //鼠标悬浮在自己头像无法获取 key
-          btn_once = btn_once[1];
+        if (btn_key_groups && btn_once_groups) {
+          btn_key = btn_key_groups[1]; //鼠标悬浮在自己头像无法获取 key
+          btn_once = btn_once_groups[1];
           (follow && _user_follow.attr("value", "关注")) ||
             _user_follow.attr("value", "撤销");
           (block && _user_block.attr("value", "屏蔽")) ||
@@ -146,26 +156,28 @@ $("#Main .avatar").mouseenter(function() {
         }
 
         setTimeout(function() {
-          _this.attr("src", _this.attr("vPlus-src"));
+          _this.attr("src", _this.attr("vPlus-src")!);
         }, 280);
-        _user_avatar.attr("src", _this.attr("vPlus-src"));
-        _user_name.text(_reply_user_name);
+        _user_avatar.attr("src", _this.attr("vPlus-src")!);
+        _user_name.text(_reply_user_name || "");
         _user_id.text(id);
-        _user_location.html(location && location[1] + "&emsp;");
+        _user_location.html((location && location[1] + "&emsp;") || "");
         _user_created.text(created);
-        _user_tagline.html(tagline && tagline[1] + "<br/>");
+        _user_tagline.html((tagline && tagline[1] + "<br/>") || "");
         _user_website.html(
-          website && "<a href='" + website[1] + "'>" + website[2] + "</a><br/>"
+          (website &&
+            "<a href='" + website[1] + "'>" + website[2] + "</a><br/>") ||
+            ""
         );
         _user_avatar.css("-webkit-filter", "grayscale(" + ~~!online + ")");
-        _user_company.html(company && company[1] + company[2]);
+        _user_company.html((company && company[1] + company[2]) || "");
         _user_info.css({
           top:
-            _this.offset().top -
-            info_position[0] * (32 + _user_info.height()) +
+            _this.offset()!.top -
+            info_position[0] * (32 + _user_info.height()!) +
             info_position[1] +
             "px",
-          left: _this.offset().left - 106 + "px",
+          left: _this.offset()!.left - 106 + "px",
           visibility: "visible",
           marginTop: "10px",
           opacity: "1"

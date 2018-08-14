@@ -3,5 +3,6 @@ export const enum V2EXUrls {
   redeem = "https://www.v2ex.com/mission/daily/redeem",
   settings = "https://www.v2ex.com/settings",
   following = "https://www.v2ex.com/my/following",
-  topics = "https://www.v2ex.com/my/topics"
+  topics = "https://www.v2ex.com/my/topics",
+  member = "https://www.v2ex.com/member/"
 }

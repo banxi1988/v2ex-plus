@@ -1,3 +1,5 @@
+import { PlainObject } from "@/typedef";
+
 function getValueByKey(key: string) {
   const item = localStorage.getItem(key);
   if (item) {
@@ -28,7 +30,7 @@ function asStorageItem(defaultValue: any) {
   } as any;
 }
 
-type PlainObject = { [key: string]: any };
+
 
 /**
  *
