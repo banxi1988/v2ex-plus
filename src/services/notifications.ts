@@ -1,6 +1,7 @@
 import { browser } from "@/browser-shims";
 import { AlarmNames, resetAlarm } from "@/services/alarms";
 import { localStorageItems } from "@/local_storage";
+import { V2EXUrls, makeTopicUrl } from "@/v2ex";
 
 export const enum NotificationIds {
   newMsg = "newMsg",
@@ -12,7 +13,7 @@ export const enum NotificationIds {
 //清除通知图标，打开通知地址
 export function clean_msg() {
   browser.browserAction.setIcon({ path: "icon/icon38.png" });
-  browser.tabs.create({ url: `https://www.v2ex.com/notifications` });
+  browser.tabs.create({ url: V2EXUrls.notifications });
 }
 
 function handleNotifications(notificationId: string) {
@@ -21,16 +22,16 @@ function handleNotifications(notificationId: string) {
       clean_msg();
       break;
     case NotificationIds.autoMission:
-      browser.tabs.create({ url: `https://www.v2ex.com/balance` });
+      browser.tabs.create({ url: V2EXUrls.balance });
       break;
     case NotificationIds.newFollowTopic:
       const topicId = localStorageItems.newFollowTopicId;
       browser.tabs.create({
-        url: `https://www.v2ex.com/t/${topicId}?p=1`
+        url: makeTopicUrl(topicId)
       });
       break;
     case NotificationIds.newCollectTopicReply:
-      browser.tabs.create({ url: `https://www.v2ex.com/my/topics` });
+      browser.tabs.create({ url: V2EXUrls.myTopics });
       break;
   }
   browser.notifications.clear(notificationId);

@@ -37,7 +37,12 @@ module.exports = {
   },
   entry: {
     background: src("background.ts"),
-    options: src("pages/options.ts")
+    options: src("pages/options.ts"),
+    all: src("all.ts"),
+    reply: src("reply/v2ex_reply.ts"),
+    new: src("new/v2ex_new.ts"),
+    collect: src("collect/v2ex_collect.ts"),
+    home: src("home/v2ex_home.ts")
   },
   output: {
     filename: "[name].bundle.js",
@@ -53,7 +58,14 @@ module.exports = {
       { test: /\.njk$/, use: ["raw-loader", "nunjucks-html-loader"] },
       { test: /\.nunjucks$/, use: ["raw-loader", "nunjucks-html-loader"] },
       { test: /\.html$/, use: ["html-loader"] },
-      { test: /\.css$/, use: ["style-loader", "css-loader"] }
+      { test: /\.css$/, use: ["style-loader", "css-loader"] },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: "url-loader",
+        options: {
+          limit: 100000
+        }
+      }
     ]
   },
   plugins: [

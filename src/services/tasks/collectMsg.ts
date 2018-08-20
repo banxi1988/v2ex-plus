@@ -5,7 +5,7 @@ import { localStorageItems } from "@/local_storage";
 //——————————————————————————————————检查关注人新主题——————————————————————————————————
 //——————————————————————————————————检查收藏主题新回复——————————————————————————————————
 export async function collectMsg() {
-  $.get(V2EXUrls.topics, function(data) {
+  $.get(V2EXUrls.myTopics, function(data) {
     var $html = $("<output>").append($.parseHTML(data));
     var topics = $html.find("div.cell.item");
     if (!topics.length) return;
@@ -13,7 +13,7 @@ export async function collectMsg() {
       localStorageItems.collectTopicCachedReplyCountList;
     var latestReplyCountList =
       localStorageItems.collectTopicLatestReplyCountList;
-    var topicIds = [];
+    const topicIds: number[] = [];
     var newReply = false;
     var topicIndex;
     for (topicIndex = 0; topicIndex < topics.length; topicIndex++) {

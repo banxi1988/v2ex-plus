@@ -137,18 +137,18 @@ export function handleMessage(
     case "get_collectList":
       localStorageItems.collectNotified = false;
       sendResponse({
-        cached: localStorage.collectTopicCachedReplyCountList,
-        latest: localStorage.collectTopicLatestReplyCountList
+        cached: localStorageItems.collectTopicCachedReplyCountList,
+        latest: localStorageItems.collectTopicLatestReplyCountList
       });
       break;
     case "clear_collect":
-      localStorage.collectTopicCachedReplyCountList = request.list;
-      localStorage.collectTopicLatestReplyCountList = request.list;
+      localStorageItems.collectTopicCachedReplyCountList = request.list;
+      localStorageItems.collectTopicLatestReplyCountList = request.list;
       sendResponse(null);
       break;
     case "sync_collect":
-      localStorage.collectTopicCachedReplyCountList = request.cached;
-      localStorage.collectTopicLatestReplyCountList = request.latest;
+      localStorageItems.collectTopicCachedReplyCountList = request.cached;
+      localStorageItems.collectTopicLatestReplyCountList = request.latest;
       break;
     default:
       throw "invaild action";

@@ -1,7 +1,7 @@
 import { getSettings } from "@/settings";
 import { storage } from "@/storage";
 import { postAutoMissionSuccessNotification } from "@/services/notifications";
-import { V2EXUrls } from "@/v2ex";
+import { V2EXUrls, regExpService } from "@/v2ex";
 
 //——————————————————————————————————通知/按钮点击反馈——————————————————————————————————
 //——————————————————————————————————自动签到——————————————————————————————————
@@ -24,9 +24,8 @@ export default async function autoMission() {
       url: V2EXUrls.redeem + sign
     });
     if (data.search("查看我的账户余额")) {
-      let result = data.match(/已连续登录 (\d+?) 天/);
-      if (settings.autoMissionMsg) {
-        const days = result[0];
+      let days = regExpService.findMissionDays(data);
+      if (days && settings.autoMissionMsg) {
         postAutoMissionSuccessNotification(days);
       }
       storage.set({ autoMission: new Date().getUTCDate() });
